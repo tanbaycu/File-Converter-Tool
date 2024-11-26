@@ -1,1 +1,9 @@
-cảm ơn bạn đã sử dụng, mã có thể lỗi ở các phần chuyển đổi vì vậy hãy đóng góp ý kiến của bạn đến tôi để tôi có cách giải quyết thích đáng. Rất cảm ơn bạn đã dành thời gian ra. 
+pandas
+pdf2docx
+python-docx
+openpyxl
+reportlab
+markdown
+PyPDF2
+python-pptx
+docx2pdf
