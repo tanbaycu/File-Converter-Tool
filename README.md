@@ -1,56 +1,63 @@
-# File Converter Tool - @T7C
+# Converted File Tools - Update 26/11/2024 ver 8.24.22
 
-## Description
+## Thư viện và Công cụ
+- Python 3.x
+- pandas
+- pdf2docx
+- python-docx
+- openpyxl
+- reportlab
+- markdown
+- PyPDF2
+- python-pptx
+- docx2pdf
 
-File Converter Tool is a versatile utility designed to facilitate the conversion between various file formats. It supports a wide range of conversions including PDF to DOCX, DOCX to PDF, XLSX to CSV, and more. This tool is ideal for automating document management tasks and streamlining your workflow.
+## Chức năng
+1. Chuyển đổi giữa các định dạng tệp sau:
+   - PDF <-> DOCX
+   - PDF <-> XLSX
+   - PDF <-> TXT
+   - DOCX <-> PDF
+   - XLSX <-> DOCX
+   - XLSX <-> PDF
+   - XLSX <-> CSV
+   - TXT <-> DOCX
+   - TXT <-> PDF
+   - TXT <-> MD
+   - CSV <-> XLSX
+   - PPTX -> PDF
+   - PPTX -> DOCX
+   - MD <-> TXT
+   - MD -> HTML
 
-## Supported Conversions
+2. Xử lý lỗi và ghi log cho mỗi quá trình chuyển đổi
+3. Giao diện dòng lệnh cho người dùng chọn tùy chọn chuyển đổi
+4. Hỗ trợ đường dẫn tệp với dấu phân cách thư mục '\'
 
-The following conversions are supported:
+## Yêu cầu phi chức năng
+1. Xử lý ngoại lệ để tránh crash ứng dụng
+2. Logging chi tiết để dễ dàng gỡ lỗi
+3. Cấu trúc mã nguồn module hóa để dễ bảo trì và mở rộng
+4. Sử dụng type hints để cải thiện khả năng đọc và bảo trì mã
 
-1. **PDF to DOCX** - Convert PDF files to Microsoft Word DOCX format.
-2. **PDF to XLSX** - Convert PDF files to Microsoft Excel XLSX format.
-3. **PDF to TXT** - Extract text from PDF files and save it as a TXT file.
-4. **DOCX to PDF** - Convert DOCX files to PDF format.
-5. **DOCX to PPTX** - Convert DOCX files to PowerPoint PPTX format.
-6. **XLSX to DOCX** - Convert Excel XLSX files to DOCX format.
-7. **XLSX to PDF** - Convert Excel XLSX files to PDF format.
-8. **XLSX to CSV** - Convert Excel XLSX files to CSV format.
-9. **TXT to DOCX** - Convert plain text files to DOCX format.
-10. **TXT to PDF** - Convert plain text files to PDF format.
-11. **TXT to Markdown (MD)** - Convert plain text files to Markdown format.
-12. **CSV to XLSX** - Convert CSV files to Excel XLSX format.
-13. **PPTX to PDF** - Convert PowerPoint PPTX files to PDF format.
-14. **PPTX to DOCX** - Convert PowerPoint PPTX files to DOCX format.
-15. **Markdown (MD) to TXT** - Convert Markdown files to plain text.
-16. **Markdown (MD) to HTML** - Convert Markdown files to HTML format.
+## Giới hạn 
+1. Một số chuyển đổi (như DOCX sang PDF) có thể yêu cầu Microsoft Word được cài đặt trên hệ thống
+2. Chất lượng chuyển đổi có thể phụ thuộc vào độ phức tạp của tệp gốc
+3. Hiệu suất có thể bị ảnh hưởng khi xử lý các tệp lớn
+4. Vẫn sẽ lỗi ở các yêu cầu chuyển đổi không đúng định dạng nội dung
 
-## Usage
+## Cập nhật
+1. Fix lỗi chuyển đổi PDF -> XLSX
+2. Điều chỉnh logic cho các chuyển đổi còn lại
+3. Điều chỉnh lỗi chuyển đổi định dạng nội dung nâng cao (đang phát triển)
 
-1. Clone this repository to your local machine:
+## Lưu ý
 
-   ```bash
-   git clone https://github.com/tanbaycu/File-Converter-Tool.git
-   ```
+*Code vẫn đang được tôi hoàn thiện và nâng cấp, mọi đóng góp hay góp ý từ bạn rất quan trọng để tôi có thể điều chỉnh một cách hoàn thiện - Xin cảm ơn*
 
-2. Navigate to the project directory:
-   ```bash
-   cd File-Converter-Tool
-   ```
-3. Install the required dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Run the script and follow the prompts to select the file and conversion type:
-   ```bash
-   python converter.py
-   ```
+## Liên hệ với tôi 
 
-## Contact
+[Telegram](https://t.me/tanbaycu)
 
-| Type    | Detail                     |
-|---------|----------------------------|
-| Name    | Tan 7 Cu                   |
-| Email   | [tranminhtan4953@gmail.com](mailto:[tranminhtan4953@gmail.com) |
-| Telegram| [TRAN MINH TAN](t.me/tanbaycu)                 |
-| Facebook| [Tran Minh Tan](https://facebook.com/tanbaycu) |
+[Email](mailto:tranminhtan4953@gmail.com)
+
