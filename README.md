@@ -1,6 +1,6 @@
-# Converted File Tools - Update 26/11/2024 ver 8.24.22
+# File Conversion Tools - Update 26/11/2024 ver 8.24.22
 
-## Thư viện và Công cụ
+## Libraries and Tools
 - Python 3.x
 - pandas
 - pdf2docx
@@ -12,52 +12,54 @@
 - python-pptx
 - docx2pdf
 
-## Chức năng
-1. Chuyển đổi giữa các định dạng tệp sau:
-   - PDF <-> DOCX
-   - PDF <-> XLSX
-   - PDF <-> TXT
-   - DOCX <-> PDF
-   - XLSX <-> DOCX
-   - XLSX <-> PDF
-   - XLSX <-> CSV
-   - TXT <-> DOCX
-   - TXT <-> PDF
-   - TXT <-> MD
-   - CSV <-> XLSX
-   - PPTX -> PDF
-   - PPTX -> DOCX
-   - MD <-> TXT
-   - MD -> HTML
+## Features
+1. Conversion between the following file formats:
+   - **PDF <-> DOCX**
+   - **PDF <-> XLSX**
+   - **PDF <-> TXT**
+   - **DOCX <-> PDF**
+   - **XLSX <-> DOCX**
+   - **XLSX <-> PDF**
+   - **XLSX <-> CSV**
+   - **TXT <-> DOCX**
+   - **TXT <-> PDF**
+   - **TXT <-> MD**
+   - **CSV <-> XLSX**
+   - **PPTX -> PDF**
+   - **PPTX -> DOCX**
+   - **MD <-> TXT**
+   - **MD -> HTML**
 
-2. Xử lý lỗi và ghi log cho mỗi quá trình chuyển đổi
-3. Giao diện dòng lệnh cho người dùng chọn tùy chọn chuyển đổi
-4. Hỗ trợ đường dẫn tệp với dấu phân cách thư mục '\'
+2. Error handling and logging for each conversion process
+3. Command-line interface for user input and option selection
+4. Support for file paths with directory separators (`\`)
 
-## Yêu cầu phi chức năng
-1. Xử lý ngoại lệ để tránh crash ứng dụng
-2. Logging chi tiết để dễ dàng gỡ lỗi
-3. Cấu trúc mã nguồn module hóa để dễ bảo trì và mở rộng
-4. Sử dụng type hints để cải thiện khả năng đọc và bảo trì mã
+## Non-functional Requirements
+1. Exception handling to prevent application crashes
+2. Detailed logging for easier debugging
+3. Modular code structure for maintainability and scalability
+4. Use of type hints to enhance code readability and maintenance
 
-## Giới hạn 
-1. Một số chuyển đổi (như DOCX sang PDF) có thể yêu cầu Microsoft Word được cài đặt trên hệ thống
-2. Chất lượng chuyển đổi có thể phụ thuộc vào độ phức tạp của tệp gốc
-3. Hiệu suất có thể bị ảnh hưởng khi xử lý các tệp lớn
-4. Vẫn sẽ lỗi ở các yêu cầu chuyển đổi không đúng định dạng nội dung
+## Limitations
+1. Some conversions (e.g., DOCX to PDF) may require Microsoft Word installed on the system
+2. Conversion quality may depend on the complexity of the original file
+3. Performance may degrade when processing large files
+4. Errors may occur for incorrectly formatted input files
 
-## Cập nhật
-1. Fix lỗi chuyển đổi PDF -> XLSX
-2. Điều chỉnh logic cho các chuyển đổi còn lại
-3. Điều chỉnh lỗi chuyển đổi định dạng nội dung nâng cao (đang phát triển)
+## Updates
+1. Fixed issues in **PDF -> XLSX** conversion
+2. Adjusted logic for other conversion processes
+3. Improved advanced content formatting support (under development)
 
-## Lưu ý
+## Notes
 
-*Code vẫn đang được tôi hoàn thiện và nâng cấp, mọi đóng góp hay góp ý từ bạn rất quan trọng để tôi có thể điều chỉnh một cách hoàn thiện - Xin cảm ơn*
+*The code is still under development and improvement. Your feedback and suggestions are invaluable for refining this tool. Thank you for your support!*
 
-## Liên hệ với tôi 
+## Contact Me
 
 [Telegram](https://t.me/tanbaycu)
 
 [Email](mailto:tranminhtan4953@gmail.com)
+
+---
 
