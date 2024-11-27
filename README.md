@@ -1,16 +1,8 @@
-# File Conversion Tools - Update 26/11/2024 ver 8.24.22
+# File Conversion Tools - Update 27/11/2024 ver12.13.58
 
 ## Libraries and Tools
-- Python 3.x
-- pandas
-- pdf2docx
-- python-docx
-- openpyxl
-- reportlab
-- markdown
-- PyPDF2
-- python-pptx
-- docx2pdf
+```bash
+pip install pandas numpy pdf2docx python-docx openpyxl reportlab markdown PyPDF2 python-pptx docx2pdf mammoth html2text pdfplumber pywin32```
 
 ## Features
 1. Conversion between the following file formats:
@@ -18,6 +10,7 @@
    - **PDF <-> XLSX**
    - **PDF <-> TXT**
    - **DOCX <-> PDF**
+   - **DOCX <-> XLSX**
    - **XLSX <-> DOCX**
    - **XLSX <-> PDF**
    - **XLSX <-> CSV**
@@ -47,9 +40,10 @@
 4. Errors may occur for incorrectly formatted input files
 
 ## Updates
-1. Fixed issues in **PDF -> XLSX** conversion
-2. Adjusted logic for other conversion processes
+1. add loop for continuous transition
+2. add docx -> xlsx conversion
 3. Improved advanced content formatting support (under development)
+4. Optimize errors in 1st conversion
 
 ## Notes
 
