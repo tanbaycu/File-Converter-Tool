@@ -1,8 +1,10 @@
 # File Conversion Tools - Update 27/11/2024 ver12.13.58
 
 ## Libraries and Tools
-```bash
-pip install pandas numpy pdf2docx python-docx openpyxl reportlab markdown PyPDF2 python-pptx docx2pdf mammoth html2text pdfplumber pywin32```
+```python
+
+pip install pandas numpy pdf2docx python-docx openpyxl reportlab markdown PyPDF2 python-pptx docx2pdf mammoth html2text pdfplumber pywin32
+```
 
 ## Features
 1. Conversion between the following file formats:
