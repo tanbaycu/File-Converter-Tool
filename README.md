@@ -1,6 +1,6 @@
 # 🔄 Công Cụ Chuyển Đổi Định Dạng Tệp - tanbaycu
 
-<img src="https://img.shields.io/badge/Phiên%20bản-12.78-blue?style=for-the-badge&logo=semver&logoColor=white" alt="Version"/>
+<img src="https://img.shields.io/badge/Phiên%20bản-13.01-blue?style=for-the-badge&logo=semver&logoColor=white" alt="Version"/>
 <img src="https://img.shields.io/badge/Cập%20nhật-25%2F3%2F2025-green?style=for-the-badge&logo=clockify&logoColor=white" alt="Update"/>
 <img src="https://img.shields.io/badge/Python-3.7%2B-yellow?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
 <img src="https://img.shields.io/badge/Trạng%20thái-Đang%20phát%20triển-red?style=for-the-badge&logo=github&logoColor=white" alt="Status"/>
@@ -12,7 +12,7 @@
 Cài đặt các thư viện cần thiết bằng lệnh sau:
 
 ```bash
-pip install pandas numpy pdf2docx python-docx openpyxl reportlab markdown PyPDF2 python-pptx docx2pdf mammoth html2text pdfplumber pywin32
+pip install -r requirements.txt
 ```
 
 ## ✨ Tính năng
