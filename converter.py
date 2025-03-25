@@ -58,16 +58,47 @@ def chuyen_doi_pdf_sang_docx(duong_dan_pdf: str) -> str:
 
 @chuyen_doi_an_toan
 def chuyen_doi_pdf_sang_xlsx(duong_dan_pdf: str) -> str:
-    duong_dan_xlsx = Path(duong_dan_pdf).with_suffix('.xlsx')
-    pdf = PdfReader(duong_dan_pdf)
-    data = []
-    for page in pdf.pages:
-        text = page.extract_text()
-        data.extend([line.split() for line in text.split('\n') if line.strip()])
+    """
+    Chuyển đổi PDF sang XLSX với khả năng phát hiện và trích xuất bảng.
     
-    df = pd.DataFrame(data)
-    df.to_excel(duong_dan_xlsx, index=False, header=False)
-    return str(duong_dan_xlsx)
+    Args:
+        duong_dan_pdf: Đường dẫn đến tệp PDF
+        
+    Returns:
+        Đường dẫn đến tệp XLSX đã tạo
+    """
+    duong_dan_xlsx = Path(duong_dan_pdf).with_suffix('.xlsx')
+    
+    try:
+        with pdfplumber.open(duong_dan_pdf) as pdf:
+            
+            with pd.ExcelWriter(duong_dan_xlsx, engine='openpyxl') as writer:
+                for i, page in enumerate(pdf.pages):
+                    
+                    tables = page.extract_tables()
+                    
+                    if tables:
+                        
+                        for j, table in enumerate(tables):
+                            df = pd.DataFrame(table[1:], columns=table[0] if table else None)
+                            sheet_name = f"Trang_{i+1}_Bảng_{j+1}"
+                            df.to_excel(writer, sheet_name=sheet_name, index=False)
+                            logging.info(f"Đã trích xuất bảng {j+1} từ trang {i+1}")
+                    else:
+                        
+                        text = page.extract_text()
+                        if text:
+                            lines = [line.split() for line in text.split('\n') if line.strip()]
+                            df = pd.DataFrame(lines)
+                            sheet_name = f"Trang_{i+1}_Văn_bản"
+                            df.to_excel(writer, sheet_name=sheet_name, index=False, header=False)
+        
+        logging.info(f"Đã chuyển đổi thành công '{duong_dan_pdf}' sang '{duong_dan_xlsx}'")
+        return str(duong_dan_xlsx)
+    
+    except Exception as e:
+        logging.error(f"Lỗi khi chuyển đổi PDF sang XLSX: {str(e)}")
+        return None
 
 @chuyen_doi_an_toan
 def chuyen_doi_docx_sang_pdf(duong_dan_docx: str) -> str:
