@@ -16,3 +16,5 @@ pywin32
 PyMuPDF
 Pillow
 pytesseract
+statistics
+html
