@@ -12,3 +12,6 @@ mammoth
 html2text
 pdfplumber
 pywin32
+
+PyMuPDF
+Pillow
