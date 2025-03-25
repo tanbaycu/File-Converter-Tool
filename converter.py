@@ -277,12 +277,111 @@ def chuyen_doi_md_sang_html(duong_dan_md: str) -> str:
 
 @chuyen_doi_an_toan
 def chuyen_doi_pdf_sang_txt(duong_dan_pdf: str) -> str:
+    """
+    Chuyển đổi PDF sang TXT với hỗ trợ OCR cho PDF quét và cải thiện định dạng.
+    
+    Args:
+        duong_dan_pdf: Đường dẫn đến tệp PDF
+        
+    Returns:
+        Đường dẫn đến tệp TXT đã tạo
+    """
     duong_dan_txt = Path(duong_dan_pdf).with_suffix('.txt')
-    pdf = PdfReader(duong_dan_pdf)
-    with open(duong_dan_txt, 'w', encoding='utf-8') as file:
-        for page in pdf.pages:
-            file.write(page.extract_text())
-    return str(duong_dan_txt)
+    
+    # Phương pháp 1: Sử dụng pdfplumber (tốt cho PDF có văn bản)
+    try:
+        logging.info(f"Đang chuyển đổi '{duong_dan_pdf}' sang TXT bằng pdfplumber...")
+        
+        with pdfplumber.open(duong_dan_pdf) as pdf:
+            with open(duong_dan_txt, 'w', encoding='utf-8') as txt_file:
+                for i, page in enumerate(pdf.pages):
+                    text = page.extract_text()
+                    if text:
+                        txt_file.write(f"--- Trang {i+1} ---\n\n")
+                        txt_file.write(text)
+                        txt_file.write("\n\n")
+        
+        # Kiểm tra kết quả
+        with open(duong_dan_txt, 'r', encoding='utf-8') as f:
+            content = f.read().strip()
+        
+        if len(content) > 100:  # Nếu có đủ văn bản
+            logging.info(f"Đã chuyển đổi thành công bằng pdfplumber: '{duong_dan_txt}'")
+            return str(duong_dan_txt)
+        else:
+            logging.warning("pdfplumber trích xuất ít văn bản. Có thể là PDF quét. Thử OCR...")
+    except Exception as e:
+        logging.warning(f"pdfplumber không thành công: {str(e)}")
+    
+    # Phương pháp 2: Sử dụng PyMuPDF + OCR cho PDF quét
+    try:
+        logging.info("Đang thử chuyển đổi bằng PyMuPDF + OCR...")
+        
+        # Tạo thư mục tạm cho hình ảnh
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Mở PDF
+            pdf_doc = fitz.open(duong_dan_pdf)
+            
+            with open(duong_dan_txt, 'w', encoding='utf-8') as txt_file:
+                for page_num, page in enumerate(pdf_doc):
+                    # Thử trích xuất văn bản trực tiếp
+                    text = page.get_text("text")
+                    
+                    # Nếu ít văn bản, thử OCR
+                    if len(text.strip()) < 100:
+                        # Chuyển trang thành hình ảnh
+                        pix = page.get_pixmap(matrix=fitz.Matrix(300/72, 300/72))
+                        img_path = os.path.join(temp_dir, f"page_{page_num+1}.png")
+                        pix.save(img_path)
+                        
+                        # OCR hình ảnh
+                        try:
+                            img = Image.open(img_path)
+                            ocr_text = pytesseract.image_to_string(img, lang='vie+eng')
+                            text = ocr_text
+                        except Exception as ocr_err:
+                            logging.warning(f"OCR không thành công cho trang {page_num+1}: {str(ocr_err)}")
+                    
+                    # Ghi văn bản vào tệp
+                    if text.strip():
+                        txt_file.write(f"--- Trang {page_num+1} ---\n\n")
+                        txt_file.write(text)
+                        txt_file.write("\n\n")
+        
+        # Kiểm tra kết quả
+        with open(duong_dan_txt, 'r', encoding='utf-8') as f:
+            content = f.read().strip()
+        
+        if content:
+            logging.info(f"Đã chuyển đổi thành công bằng PyMuPDF + OCR: '{duong_dan_txt}'")
+            return str(duong_dan_txt)
+    except Exception as e:
+        logging.warning(f"PyMuPDF + OCR không thành công: {str(e)}")
+    
+    # Phương pháp 3: Phương pháp dự phòng với PyPDF2
+    try:
+        logging.info("Đang thử phương pháp dự phòng với PyPDF2...")
+        
+        pdf = PdfReader(duong_dan_pdf)
+        with open(duong_dan_txt, 'w', encoding='utf-8') as txt_file:
+            for i, page in enumerate(pdf.pages):
+                text = page.extract_text()
+                if text:
+                    txt_file.write(f"--- Trang {i+1} ---\n\n")
+                    txt_file.write(text)
+                    txt_file.write("\n\n")
+        
+        logging.info(f"Đã chuyển đổi với phương pháp dự phòng: '{duong_dan_txt}'")
+        return str(duong_dan_txt)
+    except Exception as e:
+        logging.error(f"Tất cả các phương pháp chuyển đổi đều thất bại: {str(e)}")
+        
+        # Tạo tệp trống nếu tất cả đều thất bại
+        with open(duong_dan_txt, 'w', encoding='utf-8') as f:
+            f.write(f"Không thể trích xuất văn bản từ {Path(duong_dan_pdf).name}.\n")
+            f.write(f"Lỗi: {str(e)}")
+        
+        return str(duong_dan_txt)
 
 # Cập nhật BANG_CHUYEN_DOI với các hàm mới và cải tiến
 BANG_CHUYEN_DOI: Dict[str, Dict[str, Callable]] = {
