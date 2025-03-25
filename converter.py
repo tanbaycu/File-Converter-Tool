@@ -1,4 +1,4 @@
-import os #ver12.13.58 docx - xlsx, add try 
+import os #ver12.13.58 docx - xlsx, thêm try 
 import logging
 from pathlib import Path
 from typing import Callable, Dict
@@ -18,188 +18,189 @@ import mammoth
 import html2text
 import pdfplumber
 
-# Set up logging
+# Thiết lập logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def safe_convert(func: Callable) -> Callable:
-    """Decorator to handle exceptions in conversion functions."""
+def chuyen_doi_an_toan(func: Callable) -> Callable:
+    """Decorator để xử lý ngoại lệ trong các hàm chuyển đổi."""
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
         except Exception as e:
-            logging.error(f"Error in {func.__name__}: {str(e)}")
+            logging.error(f"Lỗi trong {func.__name__}: {str(e)}")
             return None
     return wrapper
-@safe_convert
-def convert_pdf_to_docx(pdf_path: str) -> str:
-    docx_path = Path(pdf_path).with_suffix('.docx')
+
+@chuyen_doi_an_toan
+def chuyen_doi_pdf_sang_docx(duong_dan_pdf: str) -> str:
+    duong_dan_docx = Path(duong_dan_pdf).with_suffix('.docx')
     try:
-        with Converter(pdf_path) as cv:
-            cv.convert(str(docx_path))
-        return str(docx_path)
+        with Converter(duong_dan_pdf) as cv:
+            cv.convert(str(duong_dan_docx))
+        return str(duong_dan_docx)
     except Exception as e:
-        logging.error(f"Error when using pdf2docx: {str(e)}")
-        logging.info("Trying alternative method...")
+        logging.error(f"Lỗi khi sử dụng pdf2docx: {str(e)}")
+        logging.info("Đang thử phương pháp thay thế...")
         
         try:
-            pdf = PdfReader(pdf_path)
+            pdf = PdfReader(duong_dan_pdf)
             doc = Document()
             
             for page in pdf.pages:
                 text = page.extract_text()
                 doc.add_paragraph(text)
             
-            doc.save(docx_path)
-            return str(docx_path)
+            doc.save(duong_dan_docx)
+            return str(duong_dan_docx)
         except Exception as e:
-            logging.error(f"Error when using alternative method: {str(e)}")
+            logging.error(f"Lỗi khi sử dụng phương pháp thay thế: {str(e)}")
             return None
 
-@safe_convert
-def convert_pdf_to_xlsx(pdf_path: str) -> str:
-    xlsx_path = Path(pdf_path).with_suffix('.xlsx')
-    pdf = PdfReader(pdf_path)
+@chuyen_doi_an_toan
+def chuyen_doi_pdf_sang_xlsx(duong_dan_pdf: str) -> str:
+    duong_dan_xlsx = Path(duong_dan_pdf).with_suffix('.xlsx')
+    pdf = PdfReader(duong_dan_pdf)
     data = []
     for page in pdf.pages:
         text = page.extract_text()
         data.extend([line.split() for line in text.split('\n') if line.strip()])
     
     df = pd.DataFrame(data)
-    df.to_excel(xlsx_path, index=False, header=False)
-    return str(xlsx_path)
+    df.to_excel(duong_dan_xlsx, index=False, header=False)
+    return str(duong_dan_xlsx)
 
-@safe_convert
-def convert_docx_to_pdf(docx_path: str) -> str:
-    pdf_path = Path(docx_path).with_suffix('.pdf')
-    convert(docx_path, str(pdf_path))
-    return str(pdf_path)
+@chuyen_doi_an_toan
+def chuyen_doi_docx_sang_pdf(duong_dan_docx: str) -> str:
+    duong_dan_pdf = Path(duong_dan_docx).with_suffix('.pdf')
+    convert(duong_dan_docx, str(duong_dan_pdf))
+    return str(duong_dan_pdf)
 
-@safe_convert
-def convert_xlsx_to_docx(xlsx_path: str) -> str:
-    docx_path = Path(xlsx_path).with_suffix('.docx')
-    df = pd.read_excel(xlsx_path)
+@chuyen_doi_an_toan
+def chuyen_doi_xlsx_sang_docx(duong_dan_xlsx: str) -> str:
+    duong_dan_docx = Path(duong_dan_xlsx).with_suffix('.docx')
+    df = pd.read_excel(duong_dan_xlsx)
     
     doc = Document()
     for column in df.columns:
         doc.add_heading(column, level=1)
         for value in df[column]:
             doc.add_paragraph(str(value))
-        doc.add_paragraph()  # Add a blank line between columns
+        doc.add_paragraph()  # Thêm một dòng trống giữa các cột
     
-    doc.save(docx_path)
-    return str(docx_path)
+    doc.save(duong_dan_docx)
+    return str(duong_dan_docx)
 
-@safe_convert
-def convert_docx_to_xlsx(docx_path: str) -> str:
-    xlsx_path = Path(docx_path).with_suffix('.xlsx')
-    doc = Document(docx_path)
+@chuyen_doi_an_toan
+def chuyen_doi_docx_sang_xlsx(duong_dan_docx: str) -> str:
+    duong_dan_xlsx = Path(duong_dan_docx).with_suffix('.xlsx')
+    doc = Document(duong_dan_docx)
     
     data = []
     for paragraph in doc.paragraphs:
         data.append([paragraph.text])
     
     df = pd.DataFrame(data)
-    df.to_excel(xlsx_path, index=False, header=False)
-    return str(xlsx_path)
+    df.to_excel(duong_dan_xlsx, index=False, header=False)
+    return str(duong_dan_xlsx)
 
-@safe_convert
-def convert_xlsx_to_pdf(xlsx_path: str) -> str:
-    pdf_path = Path(xlsx_path).with_suffix('.pdf')
-    df = pd.read_excel(xlsx_path)
+@chuyen_doi_an_toan
+def chuyen_doi_xlsx_sang_pdf(duong_dan_xlsx: str) -> str:
+    duong_dan_pdf = Path(duong_dan_xlsx).with_suffix('.pdf')
+    df = pd.read_excel(duong_dan_xlsx)
     
-    pdf = canvas.Canvas(str(pdf_path), pagesize=letter)
-    y = 750  # Starting y-coordinate
+    pdf = canvas.Canvas(str(duong_dan_pdf), pagesize=letter)
+    y = 750  # Tọa độ y bắt đầu
     for column in df.columns:
         pdf.drawString(100, y, column)
         y -= 20
         for value in df[column]:
             pdf.drawString(120, y, str(value))
             y -= 15
-            if y < 50:  # Start a new page if we're near the bottom
+            if y < 50:  # Bắt đầu trang mới nếu gần đến cuối trang
                 pdf.showPage()
                 y = 750
     pdf.save()
     
-    return str(pdf_path)
+    return str(duong_dan_pdf)
 
-@safe_convert
-def convert_xlsx_to_csv(xlsx_path: str) -> str:
-    csv_path = Path(xlsx_path).with_suffix('.csv')
-    df = pd.read_excel(xlsx_path)
-    df.to_csv(csv_path, index=False)
-    return str(csv_path)
+@chuyen_doi_an_toan
+def chuyen_doi_xlsx_sang_csv(duong_dan_xlsx: str) -> str:
+    duong_dan_csv = Path(duong_dan_xlsx).with_suffix('.csv')
+    df = pd.read_excel(duong_dan_xlsx)
+    df.to_csv(duong_dan_csv, index=False)
+    return str(duong_dan_csv)
 
-@safe_convert
-def convert_txt_to_docx(txt_path: str) -> str:
-    docx_path = Path(txt_path).with_suffix('.docx')
-    with open(txt_path, 'r', encoding='utf-8') as file:
+@chuyen_doi_an_toan
+def chuyen_doi_txt_sang_docx(duong_dan_txt: str) -> str:
+    duong_dan_docx = Path(duong_dan_txt).with_suffix('.docx')
+    with open(duong_dan_txt, 'r', encoding='utf-8') as file:
         text = file.read()
     
     doc = Document()
     for paragraph in text.split('\n'):
         doc.add_paragraph(paragraph)
-    doc.save(docx_path)
+    doc.save(duong_dan_docx)
     
-    return str(docx_path)
+    return str(duong_dan_docx)
 
-@safe_convert
-def convert_txt_to_pdf(txt_path: str) -> str:
-    pdf_path = Path(txt_path).with_suffix('.pdf')
-    with open(txt_path, 'r', encoding='utf-8') as file:
+@chuyen_doi_an_toan
+def chuyen_doi_txt_sang_pdf(duong_dan_txt: str) -> str:
+    duong_dan_pdf = Path(duong_dan_txt).with_suffix('.pdf')
+    with open(duong_dan_txt, 'r', encoding='utf-8') as file:
         text = file.read()
     
-    pdf = canvas.Canvas(str(pdf_path), pagesize=letter)
-    y = 750  # Starting y-coordinate
+    pdf = canvas.Canvas(str(duong_dan_pdf), pagesize=letter)
+    y = 750  # Tọa độ y bắt đầu
     for line in text.split('\n'):
         pdf.drawString(100, y, line)
         y -= 15
-        if y < 50:  # Start a new page if we're near the bottom
+        if y < 50:  # Bắt đầu trang mới nếu gần đến cuối trang
             pdf.showPage()
             y = 750
     pdf.save()
     
-    return str(pdf_path)
+    return str(duong_dan_pdf)
 
-@safe_convert
-def convert_txt_to_md(txt_path: str) -> str:
-    md_path = Path(txt_path).with_suffix('.md')
+@chuyen_doi_an_toan
+def chuyen_doi_txt_sang_md(duong_dan_txt: str) -> str:
+    duong_dan_md = Path(duong_dan_txt).with_suffix('.md')
     
-    with open(txt_path, 'r', encoding='utf-8') as file:
-        txt_content = file.read()
+    with open(duong_dan_txt, 'r', encoding='utf-8') as file:
+        noi_dung_txt = file.read()
     
-    # Simple conversion: assume each line is a paragraph
-    md_content = '\n\n'.join(txt_content.split('\n'))
+    # Chuyển đổi đơn giản: giả định mỗi dòng là một đoạn văn
+    noi_dung_md = '\n\n'.join(noi_dung_txt.split('\n'))
     
-    with open(md_path, 'w', encoding='utf-8') as file:
-        file.write(md_content)
+    with open(duong_dan_md, 'w', encoding='utf-8') as file:
+        file.write(noi_dung_md)
     
-    return str(md_path)
+    return str(duong_dan_md)
 
-@safe_convert
-def convert_csv_to_xlsx(csv_path: str) -> str:
-    xlsx_path = Path(csv_path).with_suffix('.xlsx')
-    df = pd.read_csv(csv_path)
-    df.to_excel(xlsx_path, index=False)
-    return str(xlsx_path)
+@chuyen_doi_an_toan
+def chuyen_doi_csv_sang_xlsx(duong_dan_csv: str) -> str:
+    duong_dan_xlsx = Path(duong_dan_csv).with_suffix('.xlsx')
+    df = pd.read_csv(duong_dan_csv)
+    df.to_excel(duong_dan_xlsx, index=False)
+    return str(duong_dan_xlsx)
 
-@safe_convert
-def convert_pptx_to_pdf(pptx_path: str) -> str:
+@chuyen_doi_an_toan
+def chuyen_doi_pptx_sang_pdf(duong_dan_pptx: str) -> str:
     from win32com import client
-    pdf_path = Path(pptx_path).with_suffix('.pdf')
+    duong_dan_pdf = Path(duong_dan_pptx).with_suffix('.pdf')
     
     powerpoint = client.Dispatch("Powerpoint.Application")
-    deck = powerpoint.Presentations.Open(pptx_path)
-    deck.SaveAs(pdf_path, 32)  # 32 is the PDF format code
+    deck = powerpoint.Presentations.Open(duong_dan_pptx)
+    deck.SaveAs(duong_dan_pdf, 32)  # 32 là mã định dạng PDF
     deck.Close()
     powerpoint.Quit()
     
-    return str(pdf_path)
+    return str(duong_dan_pdf)
 
-@safe_convert
-def convert_pptx_to_docx(pptx_path: str) -> str:
-    docx_path = Path(pptx_path).with_suffix('.docx')
+@chuyen_doi_an_toan
+def chuyen_doi_pptx_sang_docx(duong_dan_pptx: str) -> str:
+    duong_dan_docx = Path(duong_dan_pptx).with_suffix('.docx')
     
-    presentation = Presentation(pptx_path)
+    presentation = Presentation(duong_dan_pptx)
     doc = Document()
     
     for slide in presentation.slides:
@@ -210,131 +211,130 @@ def convert_pptx_to_docx(pptx_path: str) -> str:
                 doc.add_paragraph(shape.text)
         doc.add_page_break()
     
-    doc.save(docx_path)
-    return str(docx_path)
+    doc.save(duong_dan_docx)
+    return str(duong_dan_docx)
 
-@safe_convert
-def convert_md_to_txt(md_path: str) -> str:
-    txt_path = Path(md_path).with_suffix('.txt')
+@chuyen_doi_an_toan
+def chuyen_doi_md_sang_txt(duong_dan_md: str) -> str:
+    duong_dan_txt = Path(duong_dan_md).with_suffix('.txt')
     
-    with open(md_path, 'r', encoding='utf-8') as file:
-        md_content = file.read()
+    with open(duong_dan_md, 'r', encoding='utf-8') as file:
+        noi_dung_md = file.read()
     
     h = html2text.HTML2Text()
     h.ignore_links = True
-    txt_content = h.handle(markdown.markdown(md_content))
+    noi_dung_txt = h.handle(markdown.markdown(noi_dung_md))
     
-    with open(txt_path, 'w', encoding='utf-8') as file:
-        file.write(txt_content)
+    with open(duong_dan_txt, 'w', encoding='utf-8') as file:
+        file.write(noi_dung_txt)
     
-    return str(txt_path)
+    return str(duong_dan_txt)
 
-@safe_convert
-def convert_md_to_html(md_path: str) -> str:
-    html_path = Path(md_path).with_suffix('.html')
+@chuyen_doi_an_toan
+def chuyen_doi_md_sang_html(duong_dan_md: str) -> str:
+    duong_dan_html = Path(duong_dan_md).with_suffix('.html')
     
-    with open(md_path, 'r', encoding='utf-8') as file:
-        md_content = file.read()
+    with open(duong_dan_md, 'r', encoding='utf-8') as file:
+        noi_dung_md = file.read()
     
-    html_content = markdown.markdown(md_content, extensions=['extra'])
+    noi_dung_html = markdown.markdown(noi_dung_md, extensions=['extra'])
     
-    with open(html_path, 'w', encoding='utf-8') as file:
-        file.write(f"<html><body>{html_content}</body></html>")
+    with open(duong_dan_html, 'w', encoding='utf-8') as file:
+        file.write(f"<html><body>{noi_dung_html}</body></html>")
     
-    return str(html_path)
-@safe_convert
-def convert_pdf_to_txt(pdf_path: str) -> str:
-    txt_path = Path(pdf_path).with_suffix('.txt')
-    pdf = PdfReader(pdf_path)
-    with open(txt_path, 'w', encoding='utf-8') as file:
+    return str(duong_dan_html)
+
+@chuyen_doi_an_toan
+def chuyen_doi_pdf_sang_txt(duong_dan_pdf: str) -> str:
+    duong_dan_txt = Path(duong_dan_pdf).with_suffix('.txt')
+    pdf = PdfReader(duong_dan_pdf)
+    with open(duong_dan_txt, 'w', encoding='utf-8') as file:
         for page in pdf.pages:
             file.write(page.extract_text())
-    return str(txt_path)
-# Update the CONVERSION_MAP with the new and improved functions
-CONVERSION_MAP: Dict[str, Dict[str, Callable]] = {
+    return str(duong_dan_txt)
+
+# Cập nhật BANG_CHUYEN_DOI với các hàm mới và cải tiến
+BANG_CHUYEN_DOI: Dict[str, Dict[str, Callable]] = {
     '.pdf': {
-        '.docx': convert_pdf_to_docx,
-        '.xlsx': convert_pdf_to_xlsx,
-        '.txt': convert_pdf_to_txt,
+        '.docx': chuyen_doi_pdf_sang_docx,
+        '.xlsx': chuyen_doi_pdf_sang_xlsx,
+        '.txt': chuyen_doi_pdf_sang_txt,
     },
     '.xlsx': {
-        '.docx': convert_xlsx_to_docx,
-        '.pdf': convert_xlsx_to_pdf,
-        '.csv': convert_xlsx_to_csv,
+        '.docx': chuyen_doi_xlsx_sang_docx,
+        '.pdf': chuyen_doi_xlsx_sang_pdf,
+        '.csv': chuyen_doi_xlsx_sang_csv,
     },
     '.docx': {
-        '.pdf': convert_docx_to_pdf,
-        '.xlsx': convert_docx_to_xlsx,
+        '.pdf': chuyen_doi_docx_sang_pdf,
+        '.xlsx': chuyen_doi_docx_sang_xlsx,
     },
     '.txt': {
-        '.docx': convert_txt_to_docx,
-        '.pdf': convert_txt_to_pdf,
-        '.md': convert_txt_to_md,
+        '.docx': chuyen_doi_txt_sang_docx,
+        '.pdf': chuyen_doi_txt_sang_pdf,
+        '.md': chuyen_doi_txt_sang_md,
     },
     '.csv': {
-        '.xlsx': convert_csv_to_xlsx,
+        '.xlsx': chuyen_doi_csv_sang_xlsx,
     },
     '.pptx': {
-        '.pdf': convert_pptx_to_pdf,
-        '.docx': convert_pptx_to_docx,
+        '.pdf': chuyen_doi_pptx_sang_pdf,
+        '.docx': chuyen_doi_pptx_sang_docx,
     },
     '.md': {
-        '.txt': convert_md_to_txt,
-        '.html': convert_md_to_html,
+        '.txt': chuyen_doi_md_sang_txt,
+        '.html': chuyen_doi_md_sang_html,
     },
 }
 
-def handle_conversion(file_path: str) -> None:
-    file_path = Path(file_path)
-    if not file_path.is_file():
-        logging.error(f"'{file_path}' is not a valid file or does not exist.")
+def xu_ly_chuyen_doi(duong_dan_tep: str) -> None:
+    duong_dan_tep = Path(duong_dan_tep)
+    if not duong_dan_tep.is_file():
+        logging.error(f"'{duong_dan_tep}' không phải là tệp hợp lệ hoặc không tồn tại.")
         return
 
-    src_ext = file_path.suffix.lower()
-    if src_ext not in CONVERSION_MAP:
-        logging.error(f"Source file format not supported: {src_ext}")
+    dinh_dang_nguon = duong_dan_tep.suffix.lower()
+    if dinh_dang_nguon not in BANG_CHUYEN_DOI:
+        logging.error(f"Định dạng tệp nguồn không được hỗ trợ: {dinh_dang_nguon}")
         return
 
-    print(f"Available conversion options for {src_ext}:")
-    for i, target_ext in enumerate(CONVERSION_MAP[src_ext].keys(), 1):
-        print(f"{i}. {src_ext[1:].upper()} to {target_ext[1:].upper()}")
+    print(f"Các tùy chọn chuyển đổi có sẵn cho {dinh_dang_nguon}:")
+    for i, dinh_dang_dich in enumerate(BANG_CHUYEN_DOI[dinh_dang_nguon].keys(), 1):
+        print(f"{i}. {dinh_dang_nguon[1:].upper()} sang {dinh_dang_dich[1:].upper()}")
 
-    choice = input("Enter your choice number: ")
+    lua_chon = input("Nhập số lựa chọn của bạn: ")
     try:
-        choice = int(choice)
-        target_ext = list(CONVERSION_MAP[src_ext].keys())[choice - 1]
+        lua_chon = int(lua_chon)
+        dinh_dang_dich = list(BANG_CHUYEN_DOI[dinh_dang_nguon].keys())[lua_chon - 1]
     except (ValueError, IndexError):
-        logging.error("Invalid choice.")
+        logging.error("Lựa chọn không hợp lệ.")
         return
 
-    conversion_func = CONVERSION_MAP[src_ext][target_ext]
-    result = conversion_func(str(file_path))
+    ham_chuyen_doi = BANG_CHUYEN_DOI[dinh_dang_nguon][dinh_dang_dich]
+    ket_qua = ham_chuyen_doi(str(duong_dan_tep))
     
-    if result:
-        logging.info(f"Successfully converted '{file_path}' to '{result}'")
+    if ket_qua:
+        logging.info(f"Đã chuyển đổi thành công '{duong_dan_tep}' sang '{ket_qua}'")
     else:
-        logging.error(f"Conversion failed for '{file_path}'")
+        logging.error(f"Chuyển đổi thất bại cho '{duong_dan_tep}'")
 
 def main():
     while True:
-        print("\nFile Format Conversion Program")
-        print("Please provide the file path using \\ for directory separators.")
-        file_path = input("Enter the file path (or 'q' to quit): ")
+        print("\nChương trình chuyển đổi định dạng tệp")
+        print("\nAuthor: tanbaycu")
+        print("Vui lòng cung cấp đường dẫn tệp sử dụng \\ cho dấu phân cách thư mục.")
+        duong_dan_tep = input("Nhập đường dẫn tệp (hoặc 'q' để thoát): ")
         
-        if file_path.lower() == 'q':
-            print("Thank you for using the program. Goodbye!")
+        if duong_dan_tep.lower() == 'q':
+            print("Cảm ơn bạn đã sử dụng chương trình. Tạm biệt!")
             break
         
-        handle_conversion(file_path)
+        xu_ly_chuyen_doi(duong_dan_tep)
         
-        choice = input("\nDo you want to convert another file? (y/n): ")
-        if choice.lower() != 'y':
-            print("Thank you for using the program. Goodbye!")
+        lua_chon = input("\nBạn có muốn chuyển đổi tệp khác không? (y/n): ")
+        if lua_chon.lower() != 'y':
+            print("Cảm ơn bạn đã sử dụng chương trình. Tạm biệt!")
             break
 
 if __name__ == "__main__":
     main()
-
-
-
-

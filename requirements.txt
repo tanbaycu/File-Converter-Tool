@@ -1,1 +1,14 @@
-pip install pandas numpy pdf2docx python-docx openpyxl reportlab markdown PyPDF2 python-pptx docx2pdf mammoth html2text pdfplumber pywin32
+pandas
+numpy
+pdf2docx
+python-docx
+openpyxl
+reportlab
+markdown
+PyPDF2
+python-pptx
+docx2pdf
+mammoth
+html2text
+pdfplumber
+pywin32
